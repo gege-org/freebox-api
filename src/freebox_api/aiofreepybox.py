@@ -108,7 +108,7 @@ class Freepybox:
         self.upnpav: Upnpav
         self.upnpigd: Upnpigd
 
-    async def open(self, host: str, port: str) -> None:
+    async def open(self, host: str, port: str, check_hostname : bool = True) -> None:
         """
         Open a session to the freebox, get a valid access module
         and instantiate freebox modules
@@ -122,6 +122,8 @@ class Freepybox:
         # Disable strict validation introduced in Python 3.13, which doesn't
         # work with Freebox/iliadbox self-signed gateway certificates
         ssl_ctx.verify_flags &= ~ssl.VERIFY_X509_STRICT
+        ssl_ctx.check_hostname = check_hostname
+
 
         conn = TCPConnector(ssl_context=ssl_ctx)
         self._session = ClientSession(connector=conn)
